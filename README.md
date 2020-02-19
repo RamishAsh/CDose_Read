@@ -1,7 +1,11 @@
-pth=Input the Cdose acquisition directory. Please provide the path with just single quotation marks. i.e 'data/custom....' and not "data/custom"
+First Input 
+
+pth=Input the Cdose acquisition directory. 
 The function returns a structure with all the Image acquistions and important meta information about the image.
 
-Optional Input: Specify if you want to sum or average the image stack orjust want to leave it alone\
+
+Second Input 
+Specify if you want to sum or average the image stack orjust want to leave it alone\
 % 'Sum'= The image stack is summed across the third dimension.
 % 'Mean'=The iamge stack is averaged across the third dimension.
 % 'None'= Leave the stack as it is. This will take up a lot of memory
