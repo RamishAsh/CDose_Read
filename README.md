@@ -7,7 +7,7 @@ Second Input
 
 Specify if you want to sum or average the image stack or just want to leave it alone.
  'Sum'= The image stack is summed across the third dimension.
- 'Mean'=The iamge stack is averaged across the third dimension.
+ 'Mean'=The image stack is averaged across the third dimension.
  'None'= Leave the stack as it is. This will take up a lot of memory
 
 
