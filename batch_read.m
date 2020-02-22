@@ -61,6 +61,10 @@ for i=1:numel(folders)
         settings=ini2struct(fullfile(pth,folders(i).name,'settings.ini')); % Reading settings file to get the Acquisition name
         data(indx).Name=settings.general.description;
         X = [' Reading ',   data(indx).Name];
+        data(indx).Exposure=settings.general.exposuretime;
+        data(indx).AnalogGain=settings.general.analoggain;
+
+
         temp=read_dovi(fullfile(pth,folders(i).name,'meas_s0_cam0.dovi')); % Reading in Image File
         
         % Checks if two cameras were used and saves the two acquistions in
