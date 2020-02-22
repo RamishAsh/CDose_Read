@@ -1,12 +1,13 @@
 function [data]=batch_read(pth,varargin)
 addpath(genpath('C:\Program Files\DoseOptics\C-Dose Research\src\application\matlab'));
-% pth=Input the Cdose acquisition directory. Please provide the path with
-% just single quotation marks. i.e 'data/custom....' and not "data/custom"
+% pth=Input the Cdose directory. 
 % Returns a structure with all the Image acquistions and important meta
-% information about the image.
+% information about the images.
+% If two cameras were used simultaneously, the function will return both of
+% the images in different struct variables (Image_1 and Image_2). 
 
 % Optional Input: Specify if you want to sum or average the image stack or
-% just want to leave it alone/
+% just want to leave it alone. 
 
 
 
@@ -23,7 +24,7 @@ addpath(genpath('C:\Program Files\DoseOptics\C-Dose Research\src\application\mat
 
 
 
-% Ramish Ashraf 10/24/2019
+% Updated Ramish Ashraf 2/22/2020
 nargs=length(varargin);
 total=nargs+nargin;
 
@@ -61,27 +62,39 @@ for i=1:numel(folders)
         data(indx).Name=settings.general.description;
         X = [' Reading ',   data(indx).Name];
         temp=read_dovi(fullfile(pth,folders(i).name,'meas_s0_cam0.dovi')); % Reading in Image File
-
+        
+        % Checks if two cameras were used and saves the two acquistions in
+        % structs Image_1 and Image_2
+        if isfile(fullfile(pth,folders(i).name,'meas_s0_cam1.dovi'))
+            flag=1;
+            temp2=read_dovi(fullfile(pth,folders(i).name,'meas_s0_cam1.dovi'));
+        end
+        
+        
+        
         if strcmp(varargin{1},validnames{1})       %sum
             
-            data(indx).Image=sum(temp,3);
-%             disp('sum works');
-            
+            data(indx).Image_1=sum(temp,3);
+            if flag==1
+                data(indx).Image_2=sum(temp2,2);
+            end
         end
         if strcmp(varargin{1},validnames{2})  %mean
             
-            data(indx).Image=mean(temp,3);
-%             disp('mean works');
-            
+            data(indx).Image_1=mean(temp,3);
+            if flag==1
+                data(indx).Image_2=mean(temp2,2);
+            end
         end
         
-        if strcmp(varargin{1},validnames{3})  %mean
+        if strcmp(varargin{1},validnames{3})  %none
             
-            data(indx).Image=temp;
-%             disp('mean works');
-            
+            data(indx).Image_1=temp;
+            if flag==1
+                data(indx).Image_2=temp2;
+            end
         end
-         
+        
         disp(indx);
     end
     disp(X)
