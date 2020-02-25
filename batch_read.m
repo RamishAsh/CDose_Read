@@ -1,5 +1,5 @@
 function [data]=batch_read(pth,varargin)
-addpath(genpath('C:\Program Files\DoseOptics\C-Dose Research\src\application\matlab'));
+addpath(genpath('C:\Program Files\DoseOptics\C-Dose Research\src\application\matlab')); % add directory where your read_dovi file is stored. 
 % pth=Input the Cdose directory. 
 % Returns a structure with all the Image acquistions and important meta
 % information about the images.
