@@ -62,11 +62,12 @@ for i=1:numel(folders)
         settings=ini2struct(fullfile(pth,folders(i).name,'settings.ini')); % Reading settings file to get the Acquisition name
         data(indx).Name=settings.general.description;
         X = [' Reading ',   data(indx).Name];
+        disp(X);
         data(indx).Exposure=settings.general.exposuretime;
         data(indx).AnalogGain=settings.general.analoggain;
         temp=read_dovi(fullfile(pth,folders(i).name,'meas_s0_cam0.dovi')); % Reading in Image File
-        data(indx).NumFrames_1=size(temp,3); 
-        data(indx).TimeStramp_1=load(fullfile(pth,folders(i).name,'time_s0_cam0.txt'));
+        data(indx).NumFrames=size(temp,3); 
+        data(indx).TimeStamp=load(fullfile(pth,folders(i).name,'time_s0_cam0.txt'));
 
         
         % Checks if two cameras were used and saves the two acquistions in
@@ -104,7 +105,6 @@ for i=1:numel(folders)
             end
         end
         
-        disp(indx);
     end
  X = [num2str(num2str(100*i/numel(folders))),'% done'];
     disp(X)
