@@ -1,12 +1,12 @@
 function [data]=batch_read(pth,varargin)
-addpath(genpath('C:\Program Files\DoseOptics\C-Dose Research\src\application\matlab')); % add directory where your read_dovi file is stored. 
+addpath(genpath('C:\Program Files\DoseOptics\C-Dose Research\src\application\matlab'));
 % pth=Input the Cdose directory. 
 % Returns a structure with all the Image acquistions and important meta
 % information about the images.
 % If two cameras were used simultaneously, the function will return both of
 % the images in different struct variables (Image_1 and Image_2). 
 
-% Optional Input: Specify if you want to sum or average the image stack or
+% Input 2: Specify if you want to sum or average the image stack or
 % just want to leave it alone. 
 
 
@@ -34,12 +34,12 @@ if total<2
     error('Not enough inputs. Please specify if you want to sum/average or the leave the stack as it is.');
 end
 validnames = {'Sum', 'Mean', 'None'};
-
+flag=0;
 %% Reading in Data
 tic;
 
 folders = dir(pth);
-folders=folders(~ismember({folders.name},{'.','..'}));  % Removing useless entries (. and .. fil;  % Removing useless entries (. and .. file);
+folders=folders(~ismember({folders.name},{'.','..','.git'}));  % Removing useless entries (. and .. fil;  % Removing useless entries (. and .. file);
 folders=folders(~cellfun(@(x) x==0, {folders.isdir}));   % Ignoring files i.e isdir=1 only for folders (only keeping Folders)
 
 dum=0;
@@ -52,6 +52,7 @@ for i=1:numel(folders)         % Need to vectorize this later.
     
 end
 
+folders(dum)=[];
 
 indx=0;
 for i=1:numel(folders)
@@ -65,7 +66,8 @@ for i=1:numel(folders)
         data(indx).AnalogGain=settings.general.analoggain;
         temp=read_dovi(fullfile(pth,folders(i).name,'meas_s0_cam0.dovi')); % Reading in Image File
         data(indx).NumFrames_1=size(temp,3); 
-        
+        data(indx).TimeStramp_1=load(fullfile(pth,folders(i).name,'time_s0_cam0.txt'));
+
         
         % Checks if two cameras were used and saves the two acquistions in
         % structs Image_1 and Image_2
@@ -73,6 +75,7 @@ for i=1:numel(folders)
             flag=1;
             temp2=read_dovi(fullfile(pth,folders(i).name,'meas_s0_cam1.dovi'));   
             data(indx).NumFrames_2=size(temp2,3); 
+            data(indx).TimeStramp_2=load(fullfile(pth,folders(i).name,'time_s0_cam1.txt'));
 
         end
         
@@ -103,6 +106,7 @@ for i=1:numel(folders)
         
         disp(indx);
     end
+ X = [num2str(num2str(100*i/numel(folders))),'% done'];
     disp(X)
 end
 toc;
