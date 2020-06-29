@@ -42,17 +42,25 @@ folders = dir(pth);
 folders=folders(~ismember({folders.name},{'.','..','.git'}));  % Removing useless entries (. and .. fil;  % Removing useless entries (. and .. file);
 folders=folders(~cellfun(@(x) x==0, {folders.isdir}));   % Ignoring files i.e isdir=1 only for folders (only keeping Folders)
 
-dum=0;
+dum=[];
 % Removing Empty Folders ( i.e acquisitions that are deleted but the folder is still there although it is empty)
+k=0;
 for i=1:numel(folders)         % Need to vectorize this later.
     if(numel(dir(fullfile(pth,folders(i).name)))<=2)
-        
-        dum=i;
+        k=k+1;
+        dum(k)=i;
     end
     
 end
 
-folders(dum)=[];
+if dum~=0
+    disp('empty folder(s) found. Deleting them');
+    folders(dum(1,:))=[];
+end
+
+if dum==0
+    disp('no empty folder found');
+end
 
 indx=0;
 for i=1:numel(folders)
@@ -76,7 +84,7 @@ for i=1:numel(folders)
             flag=1;
             temp2=read_dovi(fullfile(pth,folders(i).name,'meas_s0_cam1.dovi'));   
             data(indx).NumFrames_2=size(temp2,3); 
-            data(indx).TimeStramp_2=load(fullfile(pth,folders(i).name,'time_s0_cam1.txt'));
+            data(indx).TimeStamp_2=load(fullfile(pth,folders(i).name,'time_s0_cam1.txt'));
 
         end
         
